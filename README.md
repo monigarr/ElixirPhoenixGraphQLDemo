@@ -9,16 +9,16 @@ GraphQL is a data-fetching api that is designed and used by Facebook to request 
 Phoenix is a web development framework written in Elixir. 
 
 ## Create Blog ##
-'''
+```
 mix phoenix.new blog
 cd blog
 mix ecto.create
 mix phoenix.gen.html Post posts title:string body:text
-'''
+```
 
 ## Add Post Resources ##
 Add following code to web/router.ex
-'''
+```
 scope "/", Blog do
     pipe_through :browser # Use the default browser stack
  
@@ -26,14 +26,14 @@ scope "/", Blog do
  
     resources "/posts", PostController
   end
-'''
+```
   
 ## Migrate Database ##
-'''
+```
 mix ecto.migrate
 
 ## Start Phoenix Server ##
-'''
+```
 iex -S mix phoenix.server
 
 ## View in Web Browser ##
@@ -42,7 +42,7 @@ Create a few new posts
 
 ## Add Absinthe ##
 add following code to mix.exs
-'''
+```
   defp deps do
     [{:phoenix, "~> 1.2.0"},
      {:phoenix_pubsub, "~> 1.0"},
@@ -56,26 +56,26 @@ add following code to mix.exs
      {:absinthe_plug, "~> 1.1"}
     ]
   end
-'''
+```
 
 ## Add Absinthe & Absinthe Plug ##
-'''
+```
  def application do
     [mod: {Blog, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex, :absinthe, :absinthe_plug]]
   end
-'''
+```
 
 ## Get Dependencies ##
-'''
+```
 mix deps.get
-'''
+```
 
 ## Create web/schema/types.ex ##
 Create new file 
 Add following code to the file:
-'''
+```
 defmodule Blog.Schema.Types do
   use Absinthe.Schema.Notation
  
@@ -85,11 +85,11 @@ defmodule Blog.Schema.Types do
     field :body, :string
   end
 end
-'''
+```
 
 ## Create web/schema.ex ##
 Add following code:
-'''
+```
 defmodule Blog.Schema do
   use Absinthe.Schema
   import_types Blog.Schema.Types
@@ -100,11 +100,11 @@ defmodule Blog.Schema do
     end
   end
 end
-'''
+```
 
 ## Create web/resolvers/post_resolver.ex ##
 Add following code
-'''
+```
 defmodule Blog.PostResolver do
   alias Blog.Post
   
@@ -112,11 +112,11 @@ defmodule Blog.PostResolver do
     {:ok, Blog.Repo.all(Post)}
   end
 end
-'''
+```
 
 ## Add GraphQL routes ##
 Add following code to web/router.ex
-'''
+```
   scope "/", Blog do
     pipe_through :browser # Use the default browser stack
  
@@ -128,29 +128,29 @@ Add following code to web/router.ex
  
   get "/graphql", Absinthe.Plug.GraphiQL, schema: Blog.Schema
   forward "/graphql", Absinthe.Plug, schema: Blog.Schema
-'''
+```
 
 ## Restart Phoenix Server ##
-'''
+```
 iex -S mix phoenix.server
-'''
+```
 
 ## Test Query in Web Browser ##
 In web browser: http://localhost:4000/graphql
 
 Add Query to top left of the webpage 
-'''
+```
 query {
     posts {
       id
      title
    }
-'''
+```
 
 ## Test Query in Terminal ##
-'''
+```
 curl --data "query { posts {id title }}" -H Content-Type:application/graphql -X POST http://localhost:4000/graphql
-'''
+```
 
 ## Resources ##
 - [Absinthe  GraphQL & Elixir]: (http://absinthe-graphql.org)
